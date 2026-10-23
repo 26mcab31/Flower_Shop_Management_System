@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Greedy Algorithm | Flower Shop</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff7fb, #f5f0ff, #eefaf5);
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5a189a, #7b2cbf);
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+
+        .header h1 {
+            font-size: 25px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .back-button {
+            border: none;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .info-box {
+            background: white;
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+            border-left: 5px solid #7b2cbf;
+        }
+
+        .info-box h2 {
+            color: #5a189a;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .steps {
+            margin-top: 15px;
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.8;
+            font-size: 13px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #5a189a;
+            margin-bottom: 18px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f0e5ff;
+            color: #5a189a;
+            padding: 13px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #faf7ff;
+        }
+
+        .available {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .input-section {
+            display: flex;
+            align-items: end;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            border-color: #7b2cbf;
+            box-shadow: 0 0 0 3px rgba(123,44,191,0.08);
+        }
+
+        .calculate-button {
+            padding: 13px 25px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #7b2cbf, #5a189a);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .calculate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(90,24,154,0.25);
+        }
+
+        .reset-button {
+            padding: 13px 20px;
+            border: none;
+            border-radius: 9px;
+            background: #eee;
+            color: #555;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .reset-button:hover {
+            background: #ddd;
+        }
+
+        .result {
+            display: none;
+        }
+
+        .result.success {
+            display: block;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #f3e8ff, #fff0f6);
+            padding: 20px;
+            border-radius: 13px;
+            margin-bottom: 20px;
+        }
+
+        .result-header h3 {
+            color: #5a189a;
+            margin-bottom: 8px;
+        }
+
+        .result-header p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .total-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0fff5;
+            border-radius: 12px;
+            border: 1px solid #ccebd7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-box span {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .total-box strong {
+            color: #198754;
+            font-size: 24px;
+        }
+
+        .error {
+            display: none;
+            background: #fff0f0;
+            color: #c0392b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .algorithm-box {
+            background: #2d1b36;
+            color: #f8f1fa;
+            padding: 22px;
+            border-radius: 15px;
+            margin-top: 25px;
+        }
+
+        .algorithm-box h3 {
+            color: #e7b8ff;
+            margin-bottom: 12px;
+        }
+
+        .algorithm-box p {
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media(max-width: 700px) {
+
+            .header {
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .input-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .calculate-button,
+            .reset-button {
+                width: 100%;
+            }
+
+            .total-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>🌸 Greedy Algorithm</h1>
+
+            <p>
+                Flower Order Fulfillment using Minimum Cost Strategy
+            </p>
+
+        </div>
+
+        <button class="back-button" onclick="goDashboard()">
+            ← Back to Dashboard
+        </button>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <!-- INFORMATION -->
+
+        <div class="info-box">
+
+            <h2>💡 How the Greedy Algorithm Works</h2>
+
+            <p>
+                The system fulfills a customer's flower requirement
+                by selecting the available flower with the lowest
+                price first. It takes as many flowers as possible
+                from that type and then moves to the next lowest
+                priced flower until the required quantity is fulfilled.
+            </p>
+
+            <ol class="steps">
+
+                <li>
+                    Find the available flower with the lowest price.
+                </li>
+
+                <li>
+                    Take as many flowers as required from that type.
+                </li>
+
+                <li>
+                    If more flowers are required, move to the next
+                    lowest-priced flower.
+                </li>
+
+                <li>
+                    Continue until the customer's requirement is fulfilled.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- AVAILABLE FLOWERS -->
+
+        <div class="card">
+
+            <h2>🌷 Available Flowers</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Flower</th>
+
+                        <th>Price / Flower</th>
+
+                        <th>Available Quantity</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="flowerTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- INPUT -->
+
+        <div class="card">
+
+            <h2>📦 Fulfill Customer Order</h2>
+
+            <div class="input-section">
+
+                <div class="input-group">
+
+                    <label for="requiredQuantity">
+                        Required Flower Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="requiredQuantity"
+                        min="1"
+                        placeholder="Example: 30"
+                    >
+
+                </div>
+
+
+                <button
+                    class="calculate-button"
+                    onclick="fulfillOrder()">
+
+                    🌿 Fulfill Order
+
+                </button>
+
+
+                <button
+                    class="reset-button"
+                    onclick="resetPage()">
+
+                    Reset
+
+                </button>
+
+            </div>
+
+            <div id="errorMessage" class="error"></div>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div id="resultSection" class="card result">
+
+            <div class="result-header">
+
+                <h3>
+                    ✅ Order Fulfilled Successfully
+                </h3>
+
+                <p id="resultMessage"></p>
+
+            </div>
+
+
+            <h2>
+                📋 Greedy Allocation
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Flower</th>
+
+                        <th>Price / Flower</th>
+
+                        <th>Quantity Taken</th>
+
+                        <th>Cost</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="resultTable">
+
+                </tbody>
+
+            </table>
+
+
+            <div class="total-box">
+
+                <span>
+                    Total Order Cost
+                </span>
+
+                <strong id="totalCost">
+                    ₹0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ALGORITHM -->
+
+        <div class="algorithm-box">
+
+            <h3>
+                🌿 Greedy Strategy
+            </h3>
+
+            <p>
+                At every step, the algorithm chooses the currently
+                cheapest available flower. This is the greedy choice.
+                The process continues until the required number of
+                flowers has been selected.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer">
+
+        🌸 Flower Shop Management System
+        • Data Structures Project
+        • Greedy Algorithm
+
+    </div>
+
+
+    <script>
+
+        /*
+         * AVAILABLE FLOWER DATA
+         */
+
+        const flowers = [
+
+            {
+                name: "Rose",
+                price: 120,
+                quantity: 15,
+                availability: true
+            },
+
+            {
+                name: "Lily",
+                price: 100,
+                quantity: 20,
+                availability: true
+            },
+
+            {
+                name: "Jasmine",
+                price: 80,
+                quantity: 25,
+                availability: true
+            },
+
+            {
+                name: "Sunflower",
+                price: 160,
+                quantity: 10,
+                availability: true
+            }
+
+        ];
+
+
+        /*
+         * DISPLAY FLOWERS
+         */
+
+        function displayFlowers() {
+
+            const table =
+                document.getElementById("flowerTable");
+
+            table.innerHTML = "";
+
+            flowers.forEach(function(flower) {
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+
+                    <td>${flower.name}</td>
+
+                    <td>₹${flower.price}</td>
+
+                    <td>${flower.quantity}</td>
+
+                    <td class="available">
+                        ${flower.availability ? "Available" : "Unavailable"}
+                    </td>
+
+                `;
+
+                table.appendChild(row);
+
+            });
+
+        }
+
+
+        /*
+         * GREEDY ALGORITHM
+         */
+
+        function fulfillOrder() {
+
+            const input =
+                document.getElementById("requiredQuantity");
+
+            const required =
+                parseInt(input.value);
+
+            const error =
+                document.getElementById("errorMessage");
+
+            const resultSection =
+                document.getElementById("resultSection");
+
+
+            error.style.display = "none";
+
+            resultSection.classList.remove("success");
+
+
+            /*
+             * VALIDATION
+             */
+
+            if (
+                isNaN(required) ||
+                required <= 0
+            ) {
+
+                error.textContent =
+                    "Please enter a valid quantity greater than 0.";
+
+                error.style.display = "block";
+
+                return;
+
+            }
+
+
+            /*
+             * COPY AVAILABLE FLOWERS
+             *
+             * Sort by lowest price first.
+             */
+
+            const availableFlowers =
+                flowers
+                .filter(function(flower) {
+
+                    return flower.availability &&
+                           flower.quantity > 0;
+
+                })
+                .sort(function(a, b) {
+
+                    return a.price - b.price;
+
+                });
+
+
+            let remaining = required;
+
+            let totalCost = 0;
+
+            const allocations = [];
+
+
+            /*
+             * GREEDY SELECTION
+             */
+
+            for (
+                const flower of availableFlowers
+            ) {
+
+                if (remaining <= 0) {
+
+                    break;
+
+                }
+
+
+                const quantityTaken =
+                    Math.min(
+                        remaining,
+                        flower.quantity
+                    );
+
+
+                const cost =
+                    quantityTaken *
+                    flower.price;
+
+
+                allocations.push({
+
+                    name: flower.name,
+
+                    price: flower.price,
+
+                    quantity: quantityTaken,
+
+                    cost: cost
+
+                });
+
+
+                totalCost += cost;
+
+                remaining -= quantityTaken;
+
+            }
+
+
+            /*
+             * NOT ENOUGH FLOWERS
+             */
+
+            if (remaining > 0) {
+
+                error.textContent =
+                    "Sorry! There are not enough flowers available to fulfill this order.";
+
+                error.style.display = "block";
+
+                return;
+
+            }
+
+
+            /*
+             * DISPLAY RESULT
+             */
+
+            const resultTable =
+                document.getElementById("resultTable");
+
+            resultTable.innerHTML = "";
+
+
+            allocations.forEach(function(item) {
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
+
+                    <td>${item.name}</td>
+
+                    <td>₹${item.price}</td>
+
+                    <td>${item.quantity}</td>
+
+                    <td>₹${item.cost}</td>
+
+                `;
+
+                resultTable.appendChild(row);
+
+            });
+
+
+            document.getElementById("resultMessage")
+                .textContent =
+                "Required quantity: " +
+                required +
+                " flowers";
+
+
+            document.getElementById("totalCost")
+                .textContent =
+                "₹" +
+                totalCost;
+
+
+            resultSection.classList.add("success");
+
+        }
+
+
+        /*
+         * RESET
+         */
+
+        function resetPage() {
+
+            document.getElementById(
+                "requiredQuantity"
+            ).value = "";
+
+
+            document.getElementById(
+                "errorMessage"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "resultSection"
+            ).classList.remove("success");
+
+        }
+
+
+        /*
+         * DASHBOARD
+         */
+
+        function goDashboard() {
+
+            window.location.href =
+                "dashboard.html";
+
+        }
+
+
+        /*
+         * LOAD TABLE
+         */
+
+        displayFlowers();
+
+    </script>
+
+
+</body>
+
+</html>

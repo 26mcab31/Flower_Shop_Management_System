@@ -1,0 +1,758 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop - Customer Orders</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5fa;
+            color: #39243b;
+        }
+
+        header {
+            background: linear-gradient(135deg, #d94f91, #8e44ad);
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 8px #ead9e5;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #9b3472;
+            font-weight: bold;
+            padding: 8px 12px;
+        }
+
+        nav a:hover {
+            background: #ffe4f1;
+            border-radius: 8px;
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 25px auto;
+            padding: 0 16px;
+        }
+
+        .panel {
+            background: white;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px #ead9e5;
+        }
+
+        h2 {
+            color: #a52c70;
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 17px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dfc5d6;
+            border-radius: 7px;
+            font-size: 15px;
+            background: #fffafd;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .total-box {
+            background: #fff0f7;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #a52c70;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #c13e83;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #eee0f6;
+            color: #65317c;
+        }
+
+        .notice {
+            display: none;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .notice.show {
+            display: block;
+        }
+
+        .notice.success {
+            background: #e3f7e8;
+            color: #216b38;
+        }
+
+        .notice.error {
+            background: #ffe3e6;
+            color: #a02035;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 12px #ead9e5;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+            color: #795477;
+        }
+
+        .stat-card p {
+            margin: 0;
+            font-size: 27px;
+            font-weight: bold;
+            color: #a52c70;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #f0dfeb;
+        }
+
+        th {
+            background: #fce8f3;
+            color: #8e326a;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #fff0c2;
+            color: #815b00;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #806d7e;
+            padding: 25px;
+        }
+
+        .small-note {
+            color: #766575;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #8e44ad;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 35px;
+        }
+
+        @media (max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🌸 Bloom & Blossom</h1>
+        <p>Fresh Flowers, Happy Moments</p>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="flowers.html">Manage Flowers</a>
+        <a href="orders.html">Customer Orders</a>
+        <a href="bst.html">Binary Search Tree</a>
+        <a href="graph.html">Shop Graph</a>
+        <a href="search.html">Searching</a>
+        <a href="sorting.html">Sorting</a>
+    </nav>
+
+    <main>
+        <div id="notice" class="notice" role="status"></div>
+
+        <section class="panel">
+            <h2>🌷 Place a Flower Order</h2>
+
+            <form id="orderForm">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="customer">Customer Name *</label>
+                        <input id="customer" type="text"
+                               placeholder="Enter customer name"
+                               required maxlength="100">
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Phone Number *</label>
+                        <input id="phone" type="tel"
+                               placeholder="10-digit phone number"
+                               pattern="[0-9]{10}"
+                               maxlength="10" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="flower">Select Flower *</label>
+                        <select id="flower" required>
+                            <option value="" data-price="0">
+                                Choose a flower
+                            </option>
+                            <option value="Rose" data-price="100">
+                                Rose - ₹100
+                            </option>
+                            <option value="Lily" data-price="150">
+                                Lily - ₹150
+                            </option>
+                            <option value="Tulip" data-price="120">
+                                Tulip - ₹120
+                            </option>
+                            <option value="Sunflower" data-price="150">
+                                Sunflower - ₹150
+                            </option>
+                            <option value="Orchid" data-price="250">
+                                Orchid - ₹250
+                            </option>
+                            <option value="Jasmine" data-price="80">
+                                Jasmine - ₹80
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="quantity">Quantity *</label>
+                        <input id="quantity" type="number"
+                               min="1" max="1000" value="1" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="deliveryDate">Delivery Date *</label>
+                        <input id="deliveryDate" type="date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="occasion">Occasion</label>
+                        <select id="occasion">
+                            <option value="General">General</option>
+                            <option value="Birthday">Birthday</option>
+                            <option value="Wedding">Wedding</option>
+                            <option value="Anniversary">Anniversary</option>
+                            <option value="Festival">Festival</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="field full">
+                        <label for="address">Delivery Address *</label>
+                        <textarea id="address"
+                                  placeholder="Enter delivery address"
+                                  required maxlength="500"></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <div class="total-box">
+                            Total Amount: <span id="totalAmount">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn-primary" type="submit">
+                        🌸 Place Order
+                    </button>
+                    <button class="btn-secondary" type="reset">
+                        Clear Form
+                    </button>
+                </div>
+            </form>
+
+            <p class="small-note">
+                * Required fields. The current C++ Order model stores
+                the order ID, customer name, flower name and quantity.
+                Phone, address, occasion, delivery date and price are
+                displayed in this form but are not yet stored by the
+                C++ backend.
+            </p>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <p id="totalOrders">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Orders</h3>
+                <p id="pendingOrders">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Processed This Session</h3>
+                <p id="processedOrders">0</p>
+            </div>
+        </section>
+
+        <section class="panel" id="orderQueue">
+            <h2>🌷 Customer Order List</h2>
+            <p>Orders are processed in FIFO order:
+               First In, First Out.</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Customer</th>
+                            <th>Flower</th>
+                            <th>Qty.</th>
+                            <th>Total</th>
+                            <th>Delivery Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTable"></tbody>
+                </table>
+            </div>
+
+            <div id="emptyMessage" class="empty">
+                No pending orders. Place an order to get started.
+            </div>
+
+            <p id="queueSummary" class="small-note">
+                Loading orders from the C++ backend...
+            </p>
+
+            <div class="button-row">
+                <button id="processBtn" class="btn-primary"
+                        type="button" onclick="processNext()" disabled>
+                    Process Next Order
+                </button>
+
+                <button class="btn-secondary" type="button"
+                        onclick="loadOrders()">
+                    Refresh Orders
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        🌸 Bloom & Blossom · Fresh Flowers, Happy Moments 🌸
+    </footer>
+
+    <script>
+        const API = "http://127.0.0.1:8080";
+
+        let orders = [];
+        let processedCount = 0;
+        let nextOrderId = 1;
+
+        const $ = id => document.getElementById(id);
+
+        function money(amount) {
+            return "₹" + Number(amount).toLocaleString("en-IN");
+        }
+
+        function notify(message, type = "success") {
+            const box = $("notice");
+            box.textContent = message;
+            box.className = "notice show " + type;
+        }
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        function getLocalDate() {
+            const now = new Date();
+            return new Date(
+                now.getTime() - now.getTimezoneOffset() * 60000
+            ).toISOString().slice(0, 10);
+        }
+
+        function selectedPrice() {
+            const option = $("flower").selectedOptions[0];
+            return Number(option?.dataset.price || 0);
+        }
+
+        function priceFor(flowerName) {
+            const prices = {
+                Rose: 100,
+                Lily: 150,
+                Tulip: 120,
+                Sunflower: 150,
+                Orchid: 250,
+                Jasmine: 80
+            };
+
+            return prices[flowerName] || 0;
+        }
+
+        function calculateTotal() {
+            const quantity = Number($("quantity").value) || 0;
+            $("totalAmount").textContent =
+                money(selectedPrice() * quantity);
+        }
+
+        async function apiRequest(path, method = "GET", data = null) {
+            const options = { method };
+
+            if (data !== null) {
+                options.headers = {
+                    "Content-Type": "application/json"
+                };
+                options.body = JSON.stringify(data);
+            }
+
+            const response = await fetch(API + path, options);
+            const result = await response.json();
+
+            if (!response.ok || result.status === "error") {
+                throw new Error(result.message || "Request failed.");
+            }
+
+            return result;
+        }
+
+        async function loadOrders() {
+            try {
+                const result = await apiRequest("/orders");
+                orders = result.orders || [];
+
+                const highestId = orders.reduce(
+                    (highest, order) =>
+                        Math.max(highest, Number(order.orderId) || 0),
+                    0
+                );
+
+                nextOrderId = Math.max(nextOrderId, highestId + 1);
+                renderOrders();
+            } catch (error) {
+                notify(
+                    "Cannot connect to the C++ backend. Keep the server running.",
+                    "error"
+                );
+            }
+        }
+
+        $("flower").addEventListener("change", calculateTotal);
+        $("quantity").addEventListener("input", calculateTotal);
+
+        $("deliveryDate").min = getLocalDate();
+        $("deliveryDate").value = getLocalDate();
+
+        $("orderForm").addEventListener("reset", function() {
+            setTimeout(() => {
+                $("deliveryDate").min = getLocalDate();
+                $("deliveryDate").value = getLocalDate();
+                $("quantity").value = "1";
+                calculateTotal();
+            }, 0);
+        });
+
+        $("orderForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const customerName = $("customer").value.trim();
+            const phone = $("phone").value.trim();
+            const flowerName = $("flower").value;
+            const quantity = Number($("quantity").value);
+            const deliveryDate = $("deliveryDate").value;
+            const address = $("address").value.trim();
+
+            if (!customerName || !phone || !flowerName || !address) {
+                notify("Please complete all required fields.", "error");
+                return;
+            }
+
+            if (!/^[0-9]{10}$/.test(phone)) {
+                notify("Enter a valid 10-digit phone number.", "error");
+                return;
+            }
+
+            if (!Number.isInteger(quantity) ||
+                quantity < 1 || quantity > 1000) {
+                notify(
+                    "Quantity must be a whole number between 1 and 1000.",
+                    "error"
+                );
+                return;
+            }
+
+            if (!deliveryDate || deliveryDate < getLocalDate()) {
+                notify("Choose today or a future delivery date.", "error");
+                return;
+            }
+
+            if (selectedPrice() <= 0) {
+                notify("Please select a flower.", "error");
+                return;
+            }
+
+            const submitButton =
+                this.querySelector('button[type="submit"]');
+
+            submitButton.disabled = true;
+
+            try {
+                const result = await apiRequest("/orders", "POST", {
+                    orderId: nextOrderId,
+                    customerName: customerName,
+                    flowerName: flowerName,
+                    quantity: quantity
+                });
+
+                nextOrderId++;
+
+                notify(
+                    result.message ||
+                    "Order successfully added to the C++ FIFO queue."
+                );
+
+                this.reset();
+                await loadOrders();
+            } catch (error) {
+                notify(
+                    "Order was not confirmed: " + error.message,
+                    "error"
+                );
+            } finally {
+                submitButton.disabled = false;
+                calculateTotal();
+            }
+        });
+
+        function renderOrders() {
+            const tbody = $("ordersTable");
+            tbody.innerHTML = "";
+
+            orders.forEach((order, index) => {
+                const total =
+                    priceFor(order.flowerName) * Number(order.quantity);
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${escapeHTML(order.customerName)}</strong></td>
+                    <td>${escapeHTML(order.flowerName)}</td>
+                    <td>${Number(order.quantity)}</td>
+                    <td><strong>${money(total)}</strong></td>
+                    <td>Not stored</td>
+                    <td><span class="status">Pending</span></td>
+                    <td>
+                        <button class="btn-secondary"
+                            type="button" data-index="${index}">
+                            View
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+
+            $("emptyMessage").style.display =
+                orders.length ? "none" : "block";
+
+            $("totalOrders").textContent =
+                orders.length + processedCount;
+
+            $("pendingOrders").textContent = orders.length;
+            $("processedOrders").textContent = processedCount;
+
+            $("processBtn").disabled = orders.length === 0;
+
+            $("queueSummary").textContent =
+                orders.length + " pending · " +
+                processedCount + " processed in this session · " +
+                "Pending order value: " +
+                money(orders.reduce((sum, order) =>
+                    sum + priceFor(order.flowerName) *
+                    Number(order.quantity), 0));
+        }
+
+        $("ordersTable").addEventListener("click", function(event) {
+            const button = event.target.closest("button[data-index]");
+
+            if (!button) return;
+
+            const order = orders[Number(button.dataset.index)];
+            if (!order) return;
+
+            alert(
+                "ORDER DETAILS\n\n" +
+                "Order ID: " + order.orderId + "\n" +
+                "Customer: " + order.customerName + "\n" +
+                "Flower: " + order.flowerName + "\n" +
+                "Quantity: " + order.quantity + "\n" +
+                "Estimated total: " +
+                    money(priceFor(order.flowerName) * order.quantity) +
+                "\nStatus: Pending"
+            );
+        });
+
+        async function processNext() {
+            if (orders.length === 0) {
+                notify("There are no pending orders to process.", "error");
+                return;
+            }
+
+            $("processBtn").disabled = true;
+
+            try {
+                const result =
+                    await apiRequest("/orders/process", "POST", {});
+
+                processedCount++;
+
+                const processedOrder = result.order || {};
+
+                notify(
+                    "Processed order #" +
+                    processedOrder.orderId +
+                    " for " +
+                    processedOrder.customerName +
+                    " using FIFO."
+                );
+
+                await loadOrders();
+            } catch (error) {
+                notify(
+                    "Could not process the order: " + error.message,
+                    "error"
+                );
+            } finally {
+                $("processBtn").disabled = orders.length === 0;
+            }
+        }
+
+        function showQueue() {
+            $("orderQueue").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+
+        calculateTotal();
+        loadOrders();
+    </script>
+</body>
+</html>

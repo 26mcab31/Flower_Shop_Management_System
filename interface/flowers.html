@@ -1,0 +1,499 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: #c2185b;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .back-btn {
+            background: white;
+            color: #c2185b;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .form-box, .table-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .form-box h2, .table-box h2 {
+            color: #c2185b;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .buttons button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #c2185b;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .buttons button:hover {
+            background: #ad1457;
+        }
+
+        .clear-btn {
+            background: #777 !important;
+        }
+
+        .refresh-btn {
+            background: #455a64 !important;
+            margin-bottom: 15px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 7px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+                flex-wrap: wrap;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .form-box, .table-box {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🌸 Flower Management</h1>
+        <button class="back-btn" onclick="goDashboard()">
+            ← Dashboard
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="form-box">
+            <h2>Manage Flowers</h2>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="flowerId">Flower ID</label>
+                    <input type="number" id="flowerId"
+                           placeholder="Enter flower ID" min="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="flowerName">Flower Name</label>
+                    <input type="text" id="flowerName"
+                           placeholder="Enter flower name">
+                </div>
+
+                <div class="input-group">
+                    <label for="flowerType">Flower Type</label>
+                    <input type="text" id="flowerType"
+                           placeholder="Enter flower type">
+                </div>
+
+                <div class="input-group">
+                    <label for="price">Price (₹)</label>
+                    <input type="number" id="price"
+                           placeholder="Enter price" min="0" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity"
+                           placeholder="Enter quantity" min="0" step="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="availability">Availability</label>
+                    <select id="availability">
+                        <option value="true">Available</option>
+                        <option value="false">Not Available</option>
+                    </select>
+                    <p class="hint">
+                        Availability is determined by quantity in C++.
+                    </p>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button onclick="addFlower()">Add Flower</button>
+                <button onclick="searchFlower()">Search</button>
+                <button onclick="updateFlower()">Update</button>
+                <button onclick="deleteFlower()">Delete</button>
+                <button class="clear-btn" onclick="clearForm()">Clear</button>
+            </div>
+
+            <p id="message" class="message" role="status"></p>
+        </div>
+
+        <div class="table-box">
+            <h2>Flower Records</h2>
+            <button class="refresh-btn" onclick="loadFlowers()">
+                Refresh Flower List
+            </button>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flowerTable">
+                        <tr>
+                            <td colspan="6">Loading flowers...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8080";
+
+        function showMessage(text, color = "green") {
+            const message = document.getElementById("message");
+            message.textContent = text;
+            message.style.color = color;
+        }
+
+        async function apiRequest(path, options = {}) {
+            const response = await fetch(API_BASE + path, {
+                ...options,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
+                }
+            });
+
+            const text = await response.text();
+            let data = {};
+
+            if (text) {
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    throw new Error("The backend returned an invalid response.");
+                }
+            }
+
+            if (!response.ok || data.status === "error") {
+                throw new Error(data.message || "The request failed.");
+            }
+
+            return data;
+        }
+
+        function getFlowerId() {
+            const value = document.getElementById("flowerId").value;
+            const id = Number(value);
+
+            if (!value || !Number.isInteger(id) || id <= 0) {
+                throw new Error("Enter a valid positive flower ID.");
+            }
+
+            return id;
+        }
+
+        function getPriceAndQuantity() {
+            const priceText = document.getElementById("price").value;
+            const quantityText = document.getElementById("quantity").value;
+
+            const price = Number(priceText);
+            const quantity = Number(quantityText);
+
+            if (
+                priceText === "" ||
+                !Number.isFinite(price) ||
+                price < 0
+            ) {
+                throw new Error("Enter a valid non-negative price.");
+            }
+
+            if (
+                quantityText === "" ||
+                !Number.isInteger(quantity) ||
+                quantity < 0
+            ) {
+                throw new Error("Enter a valid whole-number quantity.");
+            }
+
+            return { price, quantity };
+        }
+
+        async function loadFlowers() {
+            const table = document.getElementById("flowerTable");
+
+            table.innerHTML =
+                '<tr><td colspan="6">Loading flowers...</td></tr>';
+
+            try {
+                const data = await apiRequest("/flowers");
+
+                table.innerHTML = "";
+
+                if (!Array.isArray(data.flowers) || data.flowers.length === 0) {
+                    table.innerHTML =
+                        '<tr><td colspan="6">No flowers available.</td></tr>';
+                    return;
+                }
+
+                data.flowers.forEach(function(flower) {
+                    const row = document.createElement("tr");
+
+                    [
+                        flower.flowerId,
+                        flower.flowerName,
+                        flower.flowerType,
+                        "₹" + Number(flower.price).toFixed(2),
+                        flower.quantity,
+                        flower.availability ? "Available" : "Not Available"
+                    ].forEach(function(value) {
+                        const cell = document.createElement("td");
+                        cell.textContent = String(value);
+                        row.appendChild(cell);
+                    });
+
+                    table.appendChild(row);
+                });
+            } catch (error) {
+                table.innerHTML =
+                    '<tr><td colspan="6">Could not load flowers. Check that the C++ backend is running.</td></tr>';
+
+                showMessage(error.message, "red");
+            }
+        }
+
+        async function addFlower() {
+            try {
+                const id = getFlowerId();
+                const name = document.getElementById("flowerName").value.trim();
+                const type = document.getElementById("flowerType").value.trim();
+                const { price, quantity } = getPriceAndQuantity();
+
+                if (!name || !type) {
+                    throw new Error("Enter both flower name and flower type.");
+                }
+
+                const flower = {
+                    flowerId: id,
+                    flowerName: name,
+                    flowerType: type,
+                    price: price,
+                    quantity: quantity
+                };
+
+                const data = await apiRequest("/flowers", {
+                    method: "POST",
+                    body: JSON.stringify(flower)
+                });
+
+                showMessage(data.message || "Flower added successfully!");
+                clearForm();
+                await loadFlowers();
+            } catch (error) {
+                showMessage(error.message, "red");
+            }
+        }
+
+        async function searchFlower() {
+            try {
+                const id = getFlowerId();
+                const data = await apiRequest("/flowers/" + id, {
+                    method: "GET"
+                });
+
+                const flower = data.flower;
+
+                if (!flower) {
+                    throw new Error("Flower not found.");
+                }
+
+                document.getElementById("flowerName").value = flower.flowerName;
+                document.getElementById("flowerType").value = flower.flowerType;
+                document.getElementById("price").value = flower.price;
+                document.getElementById("quantity").value = flower.quantity;
+                document.getElementById("availability").value =
+                    flower.availability ? "true" : "false";
+
+                showMessage("Flower found!");
+            } catch (error) {
+                showMessage(error.message, "red");
+            }
+        }
+
+        async function updateFlower() {
+            try {
+                const id = getFlowerId();
+                const { price, quantity } = getPriceAndQuantity();
+
+                const data = await apiRequest("/flowers/" + id, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        price: price,
+                        quantity: quantity
+                    })
+                });
+
+                showMessage(data.message || "Flower updated successfully!");
+                await loadFlowers();
+                await searchFlower();
+            } catch (error) {
+                showMessage(error.message, "red");
+            }
+        }
+
+        async function deleteFlower() {
+            try {
+                const id = getFlowerId();
+
+                if (!confirm("Delete flower ID " + id + "?")) {
+                    return;
+                }
+
+                const data = await apiRequest("/flowers/" + id, {
+                    method: "DELETE"
+                });
+
+                showMessage(data.message || "Flower deleted successfully!");
+                clearForm();
+                await loadFlowers();
+            } catch (error) {
+                showMessage(error.message, "red");
+            }
+        }
+
+        function clearForm() {
+            document.getElementById("flowerId").value = "";
+            document.getElementById("flowerName").value = "";
+            document.getElementById("flowerType").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("quantity").value = "";
+            document.getElementById("availability").value = "true";
+        }
+
+        function goDashboard() {
+            window.location.href = "dashboard.html";
+        }
+
+        // Load actual C++ backend records when the page opens.
+        loadFlowers();
+    </script>
+</body>
+</html>

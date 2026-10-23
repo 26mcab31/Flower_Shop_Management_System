@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flower Shop - Bubble Sort</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff0f5, #ffffff);
+            padding: 30px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            background: #c2185b;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h2 {
+            color: #c2185b;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            background: #fff0f5;
+            padding: 18px;
+            border-radius: 10px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .info strong {
+            color: #c2185b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #f8dce8;
+            color: #c2185b;
+            padding: 14px;
+            text-align: center;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        tr:hover {
+            background: #fff7fa;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            background: #c2185b;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ad1457;
+        }
+
+        .clear-btn {
+            background: #777;
+        }
+
+        .clear-btn:hover {
+            background: #555;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fff0f5;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .sorted {
+            color: green;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .steps {
+            padding-left: 25px;
+            line-height: 2;
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back button {
+            background: #555;
+        }
+
+        .back button:hover {
+            background: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+
+            <h1>🔄 Bubble Sort</h1>
+
+            <p>Flower Shop Management System</p>
+
+        </div>
+
+
+        <!-- Explanation -->
+        <div class="card">
+
+            <h2>Bubble Sort</h2>
+
+            <div class="info">
+
+                <p>
+                    <strong>Bubble Sort</strong> repeatedly compares
+                    adjacent elements and swaps them if they are in
+                    the wrong order.
+                </p>
+
+                <p>
+                    In this project, Bubble Sort is used to arrange
+                    flowers according to their Flower ID.
+                </p>
+
+            </div>
+
+
+            <strong>How Bubble Sort works:</strong>
+
+            <ol class="steps">
+
+                <li>Start from the first flower.</li>
+
+                <li>Compare two adjacent flower IDs.</li>
+
+                <li>If the first ID is greater than the second ID,
+                    swap them.</li>
+
+                <li>Continue comparing the next pair.</li>
+
+                <li>Repeat the process until all flowers are sorted.</li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- Flower Records -->
+        <div class="card">
+
+            <h2>Flower Records Before Sorting</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Flower ID</th>
+                        <th>Flower Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="flowerTable">
+
+                </tbody>
+
+            </table>
+
+
+            <div class="buttons">
+
+                <button onclick="bubbleSort()">
+                    Sort by Flower ID
+                </button>
+
+                <button class="clear-btn" onclick="resetData()">
+                    Reset
+                </button>
+
+            </div>
+
+
+            <div id="result" class="result">
+
+                Click "Sort by Flower ID" to perform Bubble Sort.
+
+            </div>
+
+        </div>
+
+
+        <!-- Sorted Records -->
+        <div class="card">
+
+            <h2>Sorted Flower Records</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Flower ID</th>
+                        <th>Flower Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="sortedTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Back -->
+        <div class="back">
+
+            <button onclick="goDashboard()">
+                ← Back to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Original flower records
+        const originalFlowers = [
+
+            {
+                flowerId: 103,
+                flowerName: "Lily",
+                flowerType: "White",
+                price: 100,
+                quantity: 20
+            },
+
+            {
+                flowerId: 101,
+                flowerName: "Rose",
+                flowerType: "Red",
+                price: 120,
+                quantity: 15
+            },
+
+            {
+                flowerId: 104,
+                flowerName: "Jasmine",
+                flowerType: "White",
+                price: 80,
+                quantity: 25
+            },
+
+            {
+                flowerId: 102,
+                flowerName: "Sunflower",
+                flowerType: "Yellow",
+                price: 160,
+                quantity: 10
+            }
+
+        ];
+
+
+        // Create a copy for sorting
+        let flowers = [...originalFlowers];
+
+
+        // Display table
+        function displayFlowers() {
+
+            const table =
+                document.getElementById("flowerTable");
+
+            table.innerHTML = "";
+
+
+            for (let flower of flowers) {
+
+                const row = document.createElement("tr");
+
+                row.innerHTML =
+
+                    "<td>" + flower.flowerId + "</td>" +
+
+                    "<td>" + flower.flowerName + "</td>" +
+
+                    "<td>" + flower.flowerType + "</td>" +
+
+                    "<td>₹" + flower.price + "</td>" +
+
+                    "<td>" + flower.quantity + "</td>";
+
+
+                table.appendChild(row);
+
+            }
+
+        }
+
+
+        // Display sorted records
+        function displaySortedFlowers() {
+
+            const table =
+                document.getElementById("sortedTable");
+
+            table.innerHTML = "";
+
+
+            for (let flower of flowers) {
+
+                const row = document.createElement("tr");
+
+                row.innerHTML =
+
+                    "<td>" + flower.flowerId + "</td>" +
+
+                    "<td>" + flower.flowerName + "</td>" +
+
+                    "<td>" + flower.flowerType + "</td>" +
+
+                    "<td>₹" + flower.price + "</td>" +
+
+                    "<td>" + flower.quantity + "</td>";
+
+
+                table.appendChild(row);
+
+            }
+
+        }
+
+
+        // Bubble Sort
+        function bubbleSort() {
+
+            let n = flowers.length;
+
+
+            for (let i = 0; i < n - 1; i++) {
+
+                for (let j = 0; j < n - i - 1; j++) {
+
+                    if (
+                        flowers[j].flowerId
+                        >
+                        flowers[j + 1].flowerId
+                    ) {
+
+                        // Swap two flowers
+                        let temp = flowers[j];
+
+                        flowers[j] = flowers[j + 1];
+
+                        flowers[j + 1] = temp;
+
+                    }
+
+                }
+
+            }
+
+
+            // Display sorted records
+            displayFlowers();
+
+            displaySortedFlowers();
+
+
+            // Show result
+            const ids = flowers.map(
+                flower => flower.flowerId
+            );
+
+
+            document.getElementById("result").innerHTML =
+
+                "<span class='sorted'>" +
+                "Sorting Completed!"
+                + "</span><br><br>" +
+
+                "Sorted Flower IDs:<br>" +
+
+                ids.join(" → ");
+
+        }
+
+
+        // Reset
+        function resetData() {
+
+            flowers = [...originalFlowers];
+
+            displayFlowers();
+
+            document.getElementById("sortedTable").innerHTML = "";
+
+            document.getElementById("result").innerHTML =
+
+                'Click "Sort by Flower ID" to perform Bubble Sort.';
+
+        }
+
+
+        // Back to Dashboard
+        function goDashboard() {
+
+            window.location.href = "dashboard.html";
+
+        }
+
+
+        // Display records when page loads
+        displayFlowers();
+
+    </script>
+
+</body>
+
+</html>

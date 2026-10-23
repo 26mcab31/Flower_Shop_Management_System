@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flower Shop - Graph and BFS</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff0f5, #ffffff);
+            padding: 30px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            background: #c2185b;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h2 {
+            color: #c2185b;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            background: #fff0f5;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .info strong {
+            color: #c2185b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #f8dce8;
+            color: #c2185b;
+            padding: 14px;
+            text-align: center;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        tr:hover {
+            background: #fff7fa;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        label {
+            font-weight: bold;
+            color: #444;
+        }
+
+        select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            min-width: 180px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            background: #c2185b;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ad1457;
+        }
+
+        .back-btn {
+            background: #555;
+            margin-top: 5px;
+        }
+
+        .back-btn:hover {
+            background: #333;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fff0f5;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .bfs-result {
+            margin-top: 15px;
+            padding: 18px;
+            background: white;
+            border: 2px solid #f0c3d4;
+            border-radius: 10px;
+            color: #c2185b;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .explanation {
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .explanation ul {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                width: 100%;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th,
+            td {
+                padding: 9px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>🗺️ Flower Shop Graph</h1>
+            <p>Graph Representation and Breadth First Search</p>
+        </div>
+
+
+        <!-- Graph Explanation -->
+        <div class="card">
+
+            <h2>Graph Information</h2>
+
+            <div class="info">
+                <p>
+                    <strong>Graph:</strong>
+                    A graph is a collection of vertices and edges.
+                </p>
+
+                <p>
+                    <strong>BFS:</strong>
+                    Breadth First Search visits the connected locations
+                    level by level using a queue.
+                </p>
+            </div>
+
+            <div class="explanation">
+
+                <strong>Our Flower Shop Graph:</strong>
+
+                <ul>
+                    <li>Location 0 is connected to Location 1 and 2.</li>
+                    <li>Location 1 is connected to Location 0 and 3.</li>
+                    <li>Location 2 is connected to Location 0 and 3.</li>
+                    <li>Location 3 is connected to Location 1, 2 and 4.</li>
+                    <li>Location 4 is connected to Location 3.</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- Graph Display -->
+        <div class="card">
+
+            <h2>Flower Shop Graph</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Connected Locations</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>0</td>
+                        <td>1, 2</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td>0, 3</td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>0, 3</td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td>1, 2, 4</td>
+                    </tr>
+
+                    <tr>
+                        <td>4</td>
+                        <td>3</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- BFS -->
+        <div class="card">
+
+            <h2>Breadth First Search (BFS)</h2>
+
+            <div class="controls">
+
+                <label for="startLocation">
+                    Starting Location:
+                </label>
+
+                <select id="startLocation">
+
+                    <option value="0">Location 0</option>
+                    <option value="1">Location 1</option>
+                    <option value="2">Location 2</option>
+                    <option value="3">Location 3</option>
+                    <option value="4">Location 4</option>
+
+                </select>
+
+                <button onclick="performBFS()">
+                    Run BFS
+                </button>
+
+            </div>
+
+            <div id="result" class="result">
+                Select a starting location and click "Run BFS".
+            </div>
+
+        </div>
+
+
+        <!-- BFS Explanation -->
+        <div class="card">
+
+            <h2>How BFS Works</h2>
+
+            <div class="explanation">
+
+                <p>
+                    BFS uses a <strong>Queue</strong> to visit locations
+                    level by level.
+                </p>
+
+                <ul>
+                    <li>Step 1: Select a starting location.</li>
+                    <li>Step 2: Mark the location as visited.</li>
+                    <li>Step 3: Add it to the queue.</li>
+                    <li>Step 4: Remove one location from the queue.</li>
+                    <li>Step 5: Visit its unvisited neighbours.</li>
+                    <li>Step 6: Continue until the queue is empty.</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- Back Button -->
+        <div style="text-align: center;">
+
+            <button class="back-btn" onclick="goDashboard()">
+                ← Back to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Graph represented using adjacency list
+        const graph = [
+            [1, 2],       // Location 0
+            [0, 3],       // Location 1
+            [0, 3],       // Location 2
+            [1, 2, 4],    // Location 3
+            [3]           // Location 4
+        ];
+
+
+        // BFS function
+        function performBFS() {
+
+            const start = parseInt(
+                document.getElementById("startLocation").value
+            );
+
+            const visited = [false, false, false, false, false];
+
+            const queue = [];
+
+            const result = [];
+
+
+            // Mark starting location as visited
+            visited[start] = true;
+
+            // Add starting location to queue
+            queue.push(start);
+
+
+            // BFS process
+            while (queue.length > 0) {
+
+                // Remove first element
+                const current = queue.shift();
+
+                // Store visited location
+                result.push(current);
+
+
+                // Visit all neighbours
+                for (const neighbour of graph[current]) {
+
+                    if (!visited[neighbour]) {
+
+                        visited[neighbour] = true;
+
+                        queue.push(neighbour);
+                    }
+                }
+            }
+
+
+            // Display result
+            document.getElementById("result").innerHTML =
+                "Starting from Location " + start +
+                "<div class='bfs-result'>" +
+                result.join(" → ") +
+                "</div>";
+        }
+
+
+        // Return to dashboard
+        function goDashboard() {
+
+            window.location.href = "dashboard.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>

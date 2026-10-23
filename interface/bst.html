@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flower BST - Flower Shop</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: #c2185b;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .back-btn {
+            background: white;
+            color: #c2185b;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #c2185b;
+            margin-bottom: 15px;
+        }
+
+        .info {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button.action {
+            background: #c2185b;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button.action:hover {
+            background: #ad1457;
+        }
+
+        button.clear {
+            background: #777;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .traversal {
+            margin-top: 20px;
+            padding: 18px;
+
+            background: #fff3f7;
+
+            border-radius: 8px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            color: #444;
+        }
+
+        .example {
+            margin-top: 15px;
+            padding: 15px;
+
+            background: #f5f5f5;
+
+            border-radius: 8px;
+
+            color: #555;
+        }
+
+        @media (max-width: 700px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            🌳 Flower Binary Search Tree
+        </h1>
+
+        <button
+            class="back-btn"
+            onclick="goDashboard()">
+
+            ← Dashboard
+
+        </button>
+
+    </div>
+
+
+
+    <div class="container">
+
+
+        <!-- INFORMATION -->
+
+        <div class="box">
+
+            <h2>
+                Binary Search Tree
+            </h2>
+
+            <p class="info">
+                Flowers are stored in the Binary Search Tree
+                according to their Flower ID.
+            </p>
+
+            <p class="info">
+                Smaller IDs are placed on the left side.
+                Larger IDs are placed on the right side.
+            </p>
+
+            <p class="info">
+                Inorder Traversal visits:
+                <b>Left → Root → Right</b>
+            </p>
+
+            <div class="example">
+
+                Example:
+
+                <br><br>
+
+                Add IDs:
+
+                <b>103, 101, 102</b>
+
+                <br><br>
+
+                Inorder result:
+
+                <b>101 → 102 → 103</b>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ADD FLOWER -->
+
+        <div class="box">
+
+            <h2>
+                Add Flower to BST
+            </h2>
+
+
+            <div class="form-grid">
+
+
+                <div>
+
+                    <label>
+                        Flower ID
+                    </label>
+
+                    <input
+                        type="number"
+                        id="flowerId"
+                        placeholder="Example: 103">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Flower Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="flowerName"
+                        placeholder="Example: Lily">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Flower Type
+                    </label>
+
+                    <input
+                        type="text"
+                        id="flowerType"
+                        placeholder="Example: White">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        placeholder="Example: 100">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        placeholder="Example: 20">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Availability
+                    </label>
+
+                    <select id="availability">
+
+                        <option value="true">
+                            Available
+                        </option>
+
+                        <option value="false">
+                            Not Available
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="buttons">
+
+                <button
+                    class="action"
+                    onclick="addFlower()">
+
+                    Add Flower
+
+                </button>
+
+
+                <button
+                    class="action"
+                    onclick="displayInorder()">
+
+                    Inorder Traversal
+
+                </button>
+
+
+                <button
+                    class="action clear"
+                    onclick="clearAll()">
+
+                    Clear All
+
+                </button>
+
+            </div>
+
+
+            <p
+                id="message"
+                class="message">
+            </p>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="box">
+
+            <h2>
+                BST Flower Records
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Name</th>
+
+                        <th>Type</th>
+
+                        <th>Price</th>
+
+                        <th>Quantity</th>
+
+                        <th>Available</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="bstTable">
+
+                    <tr>
+
+                        <td colspan="6">
+                            BST is empty.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+
+            <div
+                class="traversal"
+                id="traversal">
+
+                Inorder Traversal:
+                No flowers added.
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+
+        // BST ROOT
+
+        let root = null;
+
+
+
+        // CREATE NODE
+
+        function createNode(flower) {
+
+            return {
+
+                flower: flower,
+
+                left: null,
+
+                right: null
+
+            };
+
+        }
+
+
+
+        // INSERT NODE
+
+        function insertNode(node, flower) {
+
+            if (node === null) {
+
+                return createNode(flower);
+
+            }
+
+
+            if (flower.flowerId < node.flower.flowerId) {
+
+                node.left =
+                    insertNode(
+                        node.left,
+                        flower
+                    );
+
+            }
+
+
+            else if (
+                flower.flowerId >
+                node.flower.flowerId
+            ) {
+
+                node.right =
+                    insertNode(
+                        node.right,
+                        flower
+                    );
+
+            }
+
+
+            else {
+
+                showMessage(
+                    "Flower ID already exists!",
+                    "red"
+                );
+
+            }
+
+
+            return node;
+
+        }
+
+
+
+        // ADD FLOWER
+
+        function addFlower() {
+
+            const id =
+                Number(
+                    document.getElementById(
+                        "flowerId"
+                    ).value
+                );
+
+
+            const name =
+                document.getElementById(
+                    "flowerName"
+                ).value.trim();
+
+
+            const type =
+                document.getElementById(
+                    "flowerType"
+                ).value.trim();
+
+
+            const price =
+                Number(
+                    document.getElementById(
+                        "price"
+                    ).value
+                );
+
+
+            const quantity =
+                Number(
+                    document.getElementById(
+                        "quantity"
+                    ).value
+                );
+
+
+            const availability =
+                document.getElementById(
+                    "availability"
+                ).value === "true";
+
+
+
+            // VALIDATION
+
+            if (
+                id <= 0 ||
+                name === "" ||
+                type === "" ||
+                price <= 0 ||
+                quantity <= 0
+            ) {
+
+                showMessage(
+                    "Please fill all fields correctly.",
+                    "red"
+                );
+
+                return;
+
+            }
+
+
+
+            const flower = {
+
+                flowerId: id,
+
+                flowerName: name,
+
+                flowerType: type,
+
+                price: price,
+
+                quantity: quantity,
+
+                availability: availability
+
+            };
+
+
+
+            // CHECK DUPLICATE
+
+            if (searchId(root, id)) {
+
+                showMessage(
+                    "Flower ID already exists!",
+                    "red"
+                );
+
+                return;
+
+            }
+
+
+
+            // INSERT INTO BST
+
+            root =
+                insertNode(
+                    root,
+                    flower
+                );
+
+
+
+            // DISPLAY
+
+            displayInorder();
+
+
+
+            showMessage(
+                "Flower added to BST successfully!",
+                "green"
+            );
+
+
+
+            clearForm();
+
+        }
+
+
+
+        // SEARCH ID
+
+        function searchId(node, id) {
+
+            if (node === null) {
+
+                return false;
+
+            }
+
+
+            if (id === node.flower.flowerId) {
+
+                return true;
+
+            }
+
+
+            if (id < node.flower.flowerId) {
+
+                return searchId(
+                    node.left,
+                    id
+                );
+
+            }
+
+
+            return searchId(
+                node.right,
+                id
+            );
+
+        }
+
+
+
+        // INORDER TRAVERSAL
+
+        function inorder(node, result) {
+
+            if (node === null) {
+
+                return;
+
+            }
+
+
+            // LEFT
+
+            inorder(
+                node.left,
+                result
+            );
+
+
+            // ROOT
+
+            result.push(
+                node.flower
+            );
+
+
+            // RIGHT
+
+            inorder(
+                node.right,
+                result
+            );
+
+        }
+
+
+
+        // DISPLAY INORDER
+
+        function displayInorder() {
+
+            const result = [];
+
+
+
+            inorder(
+                root,
+                result
+            );
+
+
+
+            const table =
+                document.getElementById(
+                    "bstTable"
+                );
+
+
+            const traversal =
+                document.getElementById(
+                    "traversal"
+                );
+
+
+
+            table.innerHTML = "";
+
+
+
+            if (result.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            BST is empty.
+                        </td>
+                    </tr>
+                `;
+
+
+                traversal.innerText =
+                    "Inorder Traversal: No flowers added.";
+
+                return;
+
+            }
+
+
+
+            let ids = [];
+
+
+
+            result.forEach(
+                function(flower) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${flower.flowerId}
+                        </td>
+
+                        <td>
+                            ${flower.flowerName}
+                        </td>
+
+                        <td>
+                            ${flower.flowerType}
+                        </td>
+
+                        <td>
+                            ₹${flower.price}
+                        </td>
+
+                        <td>
+                            ${flower.quantity}
+                        </td>
+
+                        <td>
+                            ${
+                                flower.availability
+                                ? "Yes"
+                                : "No"
+                            }
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+
+                    ids.push(
+                        flower.flowerId
+                    );
+
+                }
+            );
+
+
+
+            traversal.innerText =
+                "Inorder Traversal: " +
+                ids.join(" → ");
+
+        }
+
+
+
+        // CLEAR FORM
+
+        function clearForm() {
+
+            document.getElementById(
+                "flowerId"
+            ).value = "";
+
+
+            document.getElementById(
+                "flowerName"
+            ).value = "";
+
+
+            document.getElementById(
+                "flowerType"
+            ).value = "";
+
+
+            document.getElementById(
+                "price"
+            ).value = "";
+
+
+            document.getElementById(
+                "quantity"
+            ).value = "";
+
+
+            document.getElementById(
+                "availability"
+            ).value = "true";
+
+        }
+
+
+
+        // CLEAR EVERYTHING
+
+        function clearAll() {
+
+            root = null;
+
+            displayInorder();
+
+            clearForm();
+
+            showMessage(
+                "BST cleared successfully.",
+                "green"
+            );
+
+        }
+
+
+
+        // MESSAGE
+
+        function showMessage(
+            text,
+            color
+        ) {
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            message.innerText = text;
+
+            message.style.color = color;
+
+        }
+
+
+
+        // DASHBOARD
+
+        function goDashboard() {
+
+            window.location.href =
+                "dashboard.html";
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
